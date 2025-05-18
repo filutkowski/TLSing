@@ -45,11 +45,13 @@ export const generateMassURL = (url) => {
 
 export const isHttps = (url) => {
     try {
-        new URL(url); // Sprawdza poprawność URL-a
-        return url.startsWith("https://");
-    } catch {
+        const request = https.get(`https://${domain}`);
+        request.abort(); // Zatrzymanie zapytania, nie pobieramy danych
+        return true;
+      } catch (error) {
         return false;
-    }
+      }
+    
 };
 
 export const isHttp = (url) => {

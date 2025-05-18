@@ -17,12 +17,12 @@ set /p commitText=Podaj tekst w commicie:
 powershell -Command "(Get-Content package.json) -replace '\"version\": \"%versionOLD%\"', '\"version\": \"%versionNEW%\"' | Set-Content package.json"
 
 :: Dodanie zmian do Git
-git add .
-git commit -m "%commitText%"
-git push --force
+call git add .
+call git commit -m "%commitText%"
+call git push --force
 
 :: Publikacja na npm
-npm publish
+call npm publish
 
 echo Publikacja zakończona!
 echo Zaktualizowano z %versionOLD% do %versionNEW%
