@@ -1,15 +1,14 @@
 import tls from "tls";
 import validator from "validator";
-import https from "https";
 
 export const checkTLS = (url) => {
     try {
-        const port = checkPortInURL(url) || "443";
+        const port = checkPortInURL(url) || "443"; 
         if (!port || port === "80") return false;
 
         let authorized = false;
 
-        // Nawiązanie połączenia TLS
+        // Połączenie TLS bez użycia HTTPS bezpośrednio
         const socket = tls.connect({ host: url, port }, () => {
             const cert = socket.getPeerCertificate();
             socket.end();
@@ -19,12 +18,11 @@ export const checkTLS = (url) => {
             }
         });
 
-        // Obsługa błędów
         socket.on("error", () => {
             authorized = false;
         });
 
-        return authorized; // Zwraca wartość certyfikatu
+        return authorized; 
     } catch (error) {
         return false;
     }
@@ -44,18 +42,11 @@ export const generateMassURL = (url) => {
 };
 
 export const isHttps = (url) => {
-    try {
-        const request = https.get(`https://${domain}`);
-        request.abort(); // Zatrzymanie zapytania, nie pobieramy danych
-        return true;
-      } catch (error) {
-        return false;
-      }
-    
+    return checkTLS(url); // Sprawdzanie poprzez funkcję TLS
 };
 
 export const isHttp = (url) => {
-    return !isHttps(url);
+    return !checkTLS(url);
 };
 
 const table = {
