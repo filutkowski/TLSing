@@ -2,13 +2,9 @@ import tls from "tls";
 import validator from "validator";
 import https from "https";
 
-// Sprawdza certyfikat TLS strony
-import tls from "tls";
-import validator from "validator";
-
 export const checkTLS = async (url) => {
     try {
-        const port = checkPortInURL(url) || "443"; // Domyślny port TLS
+        const port = checkPortInURL(url) || "443";
         if (!port || port === "80") return false;
 
 
@@ -28,7 +24,6 @@ export const checkTLS = async (url) => {
     }
 };
 
-// Sprawdza, czy URL zawiera port
 export const checkPortInURL = (url) => {
     if (validator.isURL(url) || validator.isIP(url)) {
         const hasPort = url.match(/:\d+$/);
@@ -37,13 +32,11 @@ export const checkPortInURL = (url) => {
     return null;
 };
 
-// Sprawdza, jaki port powinna mieć strona
 export const generateMassURL = (url) => {
     const port = checkPortInURL(url);
     return port !== null ? port : isHttps(url) ? "443" : "80";
 };
 
-// Sprawdza, czy strona działa na HTTPS
 export const isHttps = (url) => {
     try {
         https.get(url);
@@ -53,7 +46,6 @@ export const isHttps = (url) => {
     }
 };
 
-// Sprawdza, czy strona działa na HTTP
 export const isHttp = (url) => {
     return !isHttps(url);
 };
