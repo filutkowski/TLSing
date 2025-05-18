@@ -4,27 +4,24 @@ import https from "https";
 
 // Sprawdza certyfikat TLS strony
 export const checkTLS = (url) => {
-    if (!isHttps(url)) return false;
     try {
-        const port = generateMassURL(url);
-        if (!port) return false; // Upewnij się, że port jest poprawny
+        const port = checkPortInURL(url) || "443"; // Domyślny port TLS
+        if (!port || port === "80") return false; // Upewnij się, że port jest poprawny
 
-        // Nawiązanie połączenia TLS
-        const socket = tls.connect({ host: url, port }, () => {
-            const cert = socket.getPeerCertificate();
-            socket.end();
+        return new Promise((resolve) => {
+            // Nawiązanie połączenia TLS
+            const socket = tls.connect({ host: url, port }, () => {
+                const cert = socket.getPeerCertificate();
+                socket.end();
 
-            if (!cert || !cert.valid_to) {
-                return false;
-            }
+                resolve(cert && cert.valid_to ? socket.authorized : false);
+            });
+
+            // Obsługa błędów
+            socket.on("error", () => {
+                resolve(false);
+            });
         });
-
-        // Obsługa błędów
-        socket.on("error", () => {
-            return false;
-        });
-
-        return socket.authorized; // Zwraca prawidłową wartość certyfikatu
     } catch (error) {
         return false;
     }
