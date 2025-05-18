@@ -7,22 +7,24 @@ export const checkTLS = (url) => {
         const port = checkPortInURL(url) || "443";
         if (!port || port === "80") return false;
 
+        let authorized = false;
+
         // Nawiązanie połączenia TLS
         const socket = tls.connect({ host: url, port }, () => {
             const cert = socket.getPeerCertificate();
             socket.end();
 
-            if (!cert || !cert.valid_to) {
-                return false;
+            if (cert && cert.valid_to) {
+                authorized = socket.authorized;
             }
         });
 
         // Obsługa błędów
         socket.on("error", () => {
-            return false;
+            authorized = false;
         });
 
-        return socket.authorized; // Zwraca wartość certyfikatu
+        return authorized; // Zwraca wartość certyfikatu
     } catch (error) {
         return false;
     }
@@ -43,8 +45,8 @@ export const generateMassURL = (url) => {
 
 export const isHttps = (url) => {
     try {
-        https.get(url);
-        return true;
+        new URL(url); // Sprawdza poprawność URL-a
+        return url.startsWith("https://");
     } catch {
         return false;
     }
