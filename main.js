@@ -2,23 +2,27 @@ import tls from "tls";
 import validator from "validator";
 import https from "https";
 
-export const checkTLS = async (url) => {
+export const checkTLS = (url) => {
     try {
         const port = checkPortInURL(url) || "443";
         if (!port || port === "80") return false;
 
+        // Nawiązanie połączenia TLS
+        const socket = tls.connect({ host: url, port }, () => {
+            const cert = socket.getPeerCertificate();
+            socket.end();
 
-            const socket = tls.connect({ host: url, port }, () => {
-                const cert = socket.getPeerCertificate();
-                socket.end();
-
-                return cert && cert.valid_to ? socket.authorized : false
-            });
-
-            socket.on("error", () => {
+            if (!cert || !cert.valid_to) {
                 return false;
-            });
-        
+            }
+        });
+
+        // Obsługa błędów
+        socket.on("error", () => {
+            return false;
+        });
+
+        return socket.authorized; // Zwraca wartość certyfikatu
     } catch (error) {
         return false;
     }
