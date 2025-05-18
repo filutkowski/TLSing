@@ -1,0 +1,16 @@
+{
+  "name": "tlsing",
+  "version": "1.2.2",
+  "description": "The sof",
+  "license": "MIT",
+  "author": "Michał",
+  "type": "module",
+  "main": "main.js",
+  "keywords": ["tsl", "tsling, security, Marchol, BrowserTools, MarcholLibray"],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "validator": "^13.15.0"
+  }
+}
