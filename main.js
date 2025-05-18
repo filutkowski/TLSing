@@ -8,7 +8,7 @@ export const checkTLS = (url) => {
 
         let authorized = false;
 
-        // Połączenie TLS bez użycia HTTPS bezpośrednio
+        // Połączenie TLS bez użycia HTTPS
         const socket = tls.connect({ host: url, port }, () => {
             const cert = socket.getPeerCertificate();
             socket.end();
@@ -42,11 +42,12 @@ export const generateMassURL = (url) => {
 };
 
 export const isHttps = (url) => {
-    return checkTLS(url); // Sprawdzanie poprzez funkcję TLS
+    const port = checkPortInURL(url);
+    return port === "443" || checkTLS(url); // Sprawdzanie przez TLS i port
 };
 
 export const isHttp = (url) => {
-    return !checkTLS(url);
+    return !isHttps(url);
 };
 
 const table = {

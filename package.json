@@ -1,6 +1,6 @@
 {
   "name": "tlsing",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "tlsing is an open source library available on npm for testing TLS security on websites. It is designed to analyze certificates, check HTTPS protocols, and detect potential security holes. The library is used in the Marchol browser and is based on Node.js, using many built-in modules such as http, https, validator, and tls to provide accurate test results. To use this library, please use npm install tlsing.",
   "license": "MIT",
   "author": "Michał",
